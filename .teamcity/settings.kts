@@ -25,7 +25,7 @@ To debug in IntelliJ Idea, open the 'Maven Projects' tool window (View
 'Debug' option is available in the context menu for the task.
 */
 
-version = "2023.05"
+version = "2025.03"
 
 project {
 
@@ -56,11 +56,17 @@ object Build1 : BuildType({
         script {
             id = "simpleRunner"
             scriptContent = """
-                if [ %a% -gt 0 ]; then
-                echo "##teamcity[buildStop comment='Stop trigger. Not latest patchset' readdToQueue='false']"
-                echo "##teamcity[buildStatus text='Not latest patchset']"
-                fi
+                @echo off
+                set a=1
+                
+                if %a% GTR 0 (
+                    echo ##teamcity[buildStop comment='Stop trigger. Not latest patchset' readdToQueue='false']
+                    echo ##teamcity[buildStatus text='Not latest patchset']
+                )
             """.trimIndent()
+            param("org.jfrog.artifactory.selectedDeployableServer.useSpecs", "false")
+            param("org.jfrog.artifactory.selectedDeployableServer.uploadSpecSource", "Job configuration")
+            param("org.jfrog.artifactory.selectedDeployableServer.downloadSpecSource", "Job configuration")
         }
     }
 
@@ -80,6 +86,6 @@ object Parametrized_1 : GitVcsRoot({
     branchSpec = "%roadrunner.branch.spec%"
     authMethod = password {
         userName = "ChubatovaTiger"
-        password = "credentialsJSON:8a89a428-4e80-4101-a4ae-396083bc3fc6"
+        password = "credentialsJSON:b52775aa-53a6-4ee8-8b8f-79503fa059b2"
     }
 })
